@@ -13,7 +13,7 @@ if __name__ == '__main__':
     from utilities import *
     from modules import *
 
-    import new_gradfree_fun2
+    import new_gradfree_fun_3
 
     torch.manual_seed(0)
     np.random.seed(0)
@@ -131,8 +131,8 @@ if __name__ == '__main__':
     """ Model configurations """
 
     data_path = []
-    data_path.append(r"C:\Users\mehul\a Folder\DataPhysicsHybrid\data\128\nagumo_dat_128.mat")
-    data_path.append(r"C:\Users\mehul\a Folder\DataPhysicsHybrid\data\128\new_128burger_data.mat")
+    data_path.append(r"data/nagumo_data_256x1200.mat")
+    data_path.append(r"data/burger_data_256x1200.mat")
 
     case_len = len(data_path)
     data_label = torch.arange(1, case_len+1)
@@ -183,7 +183,7 @@ if __name__ == '__main__':
 # %%
     """ Load the model to be tested """
     # Using the old pre-trained model for testing (change the path to test for a newly trained model by adding the model from the ) 
-    model = torch.load(r"C:\Users\mehul\a Folder\DataPhysicsHybrid\data\models\7_experts\[num_experts=7]Foundational_phy_informed_[t=40]2025-10-05_18-49-52.pth", weights_only = False)
+    model = torch.load(r"Models\Foundational_Model_7_experts.pth", weights_only = False)
     print(count_params(model))
 
     myloss = LpLoss(size_average=False)
@@ -236,7 +236,7 @@ if __name__ == '__main__':
             
             import pandas as pd 
             df = pd.DataFrame(case_accuracies_all_samples)
-            df.to_csv(rf'C:\Users\mehul\a Folder\DataPhysicsHybrid\Debugged Nagumo\plots\accuracies_case_{case_names[i]}_T{T}.csv', index=False)
+            df.to_csv(rf'Plots\{case_names[i]}_T{T}.csv', index=False)
             
 # %%
     """ Plotting Time Steps vs. Accuracy """
@@ -274,5 +274,5 @@ if __name__ == '__main__':
         ax.axhline(y=0, color='r', linestyle='--', alpha=0.5) 
 
     plt.tight_layout(rect=[0, 0.03, 1, 0.96]) 
-    plt.savefig(rf'C:\Users\mehul\a Folder\DataPhysicsHybrid\Debugged Nagumo\plots\model_performance_plot{T}.png')
+    plt.savefig(rf'Plots\model_performance_plot{T}.png')
     plt.show()

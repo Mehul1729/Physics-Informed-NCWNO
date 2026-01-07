@@ -46,7 +46,7 @@ if __name__ == "__main__":
     from torch.optim.lr_scheduler import CosineAnnealingWarmRestarts
 
 
-    import new_gradfree_fun2 as new_gradfree_fun
+    import new_gradfree_fun_3 as new_gradfree_fun
 
 
     torch.manual_seed(0)
@@ -268,11 +268,10 @@ if __name__ == "__main__":
 
     data_path = []
 
-    data_path.append(r"C:\Users\mehul\a Folder\DataPhysicsHybrid\data\new 256\nagumo_data_256x1200.mat")
+    data_path.append(r"data/nagumo_data_256x1200.mat")
 
 
-    data_path.append(r"C:\Users\mehul\a Folder\DataPhysicsHybrid\data\new 256\burger_data_256x1200.mat")
-
+    data_path.append(r"data/burger_data_256x1200.mat")
     
 
     case_len = len(data_path) 
@@ -312,7 +311,7 @@ if __name__ == "__main__":
 
     step = 1
 
-    S = 256
+    S = 128
 
     prop = loadmat(data_path[0])['x']
 
@@ -495,151 +494,6 @@ if __name__ == "__main__":
 
             epoch_train_step = np.zeros( pde_no ) # loss for each PDE
 
-            # --- TRAINING SECTION (UNCHANGED) ---
-
-            # ... (The entire training logic remains exactly the same as your original code) ...
-
-            # ... (Weight calculation, batch processing, loss calculation, backpropagation) ...
-
-            # For brevity, the unchanged training code is omitted here, but it is present in the full script.
-
-            # calculating the Normalising weights for PDE batch losses:
-
-            # if ep == 0:
-
-            #     with torch.no_grad():
-
-            #         weights = [0,0,0]
-
-            #         for i, case_loader in enumerate(train_loader[:pde_no]):
-
-            #             print(f"Normalising weights calculation:")
-
-            #             total_loss = 0
-
-            #             case_train_step = 0
-
-            #             case_ic_loss = 0
-
-            #             j = 0
-
-            #             for xx, yy in case_loader: # only calculating the loss for the first batch
-
-            #                 j+= 1
-
-            #                 loss_ic = 0
-
-            #                 loss = 0
-
-            #                 xx = xx.to(device)
-
-            #                 yy = yy.to(device)
-
-            #                 for t in range(0, T, step):
-
-                                
-
-            #                     y = yy[:, t:t + step, ...] # [20, 1, 64]
-
-            #                     im = model(xx, data_label[i])    # input- mesh + label
-
-            #                     # loss += (im.reshape(batch_size, -1), y.reshape(batch_size, -1))
-
-            #                     # print(f"Shape of im:{im.shape}")
-
-            #                     if t == 0:
-
-            #                         loss_ic = F.mse_loss(im, yy[:, t:t+step, ...])
-
-                                    
-
-            #                         pred = im # shape : [20, 1, 64] :: Batch, Time step, Spatial Points
-
-            #                     else:
-
-            #                         pred = torch.cat((pred, im), 1)
-
-
-            #                     # """Vectorized sample processing"""
-
-                                
-
-            #                     x_pf = xx[:, :, :].reshape(batch_size, N_f) # u_n for CN loss
-
-            #                     y_pf = im.reshape(batch_size, N_f) # prediction for the current time step
-
-                                
-
-            #                     y_pred = im.squeeze(1) # new shape : [batch_size, 64] :: [number of samples, spatial points]
-
-            #                     y_true = y.squeeze(1)
-
-                                
-
-                                
-
-            #                     left_u = y_pred[:, 0] # all samples, only one spatial point ; shape = [batch_size, 1]
-
-            #                     right_u = y_pred[:, -1]
-
-            #                     left_usol = y_true[:, 0]
-
-            #                     right_usol = y_true[:, -1]
-
-                            
-
-            #                     all_u_train = torch.hstack([left_u, right_u ])
-
-            #                     all_u_sol = torch.hstack([left_usol, right_usol]) # shape : [battch_size, 2]
-
-                                    
-
-            #                         # collecting the losses for all the time steps here : 
-
-            #                     match i:
-
-            #                         case 0:
-
-            #                             loss += gf_nagumo.loss(all_u_train, all_u_sol, x_pf, x_f_train, y_pf, allen_invp_index, allen_invp_index)
-
-            #                         case 1:
-
-            #                             loss += gf_burger.loss(all_u_train, all_u_sol, x_pf, x_f_train, y_pf, burger_p_index, burger_invp_index)
-
-
-            #                             # loss += gf_nagumo.loss(all_u_train, all_u_sol, x_pf, x_f_train, y_pf, nagumo_p_index, nagumo_invp_index)
-
-            #                         # case 2:
-
-            #                         #     loss += gf_burger.loss(all_u_train, all_u_sol, x_pf, x_f_train, y_pf, burger_p_index, burger_invp_index)
-
-
-            #                     # Shifting the input window by one time step:
-
-            #                     xx = torch.cat((xx[:, step:, ...], im.detach()), dim=1)
-
-            #                 case_train_step += loss
-
-            #                 case_ic_loss += loss_ic
-
-            #                 if j == 6:
-
-            #                     break
-
-            #             total_loss = case_train_step + case_ic_loss
-
-            #             avg_loss = total_loss / j
-
-            #             weights[i] = 1 / avg_loss
-
-            #             weights[i] = weights[i].detach()
-
-
-                        
-
-            #         print(f"The relative weights for PDE are : {weights}")
-
-            #%%
 
 
 
@@ -678,13 +532,7 @@ if __name__ == "__main__":
 
                         im = model(xx, data_label[i])    # input mesh + label
                         
-                        # --- NEW: DATA LOSS CALCULATION ---
-                        # Select the 8 uniformly sampled points from prediction and ground truth
-                        # sampled_pred = im[:, :, data_indices]
-                        # sampled_true = y[:, :, data_indices]
-                        # # Accumulate the MSE loss for these points
-                        # data_loss += F.mse_loss(sampled_pred, sampled_true)
-                        # --- END OF NEW CODE ---
+                 
 
                         if t == 0:
 
@@ -935,12 +783,12 @@ if __name__ == "__main__":
 
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
-        model_name = f"[actual-3 256, num_experts=5, less neigh]Foundational_context+phy_informed_[t=40]{timestamp}.pth"
+        model_name = f"Foudational Model-{timestamp}.pth"
 
-        torch.save(model, rf"C:\Users\mehul\a Folder\DataPhysicsHybrid\data\models\nagumo debugged\{model_name}") 
+        torch.save(model, rf"Models\{model_name}") 
         
         artifact = wandb.Artifact(name=f"model-foundational with 7 experts", type="model", metadata={"epochs_trained": ep + 1})
-        artifact.add_file(rf"C:\Users\mehul\a Folder\DataPhysicsHybrid\data\models\7_experts\{model_name}")
+        artifact.add_file(rf"Models\{model_name}")
         wandb.log_artifact(artifact)
         
         print("All epochs run. Saved the final model.")
@@ -950,9 +798,9 @@ if __name__ == "__main__":
 
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
-        model_name = f"[actual-3 256, num_experts=5]Foundational_phy_informed_[t=20]{timestamp}.pth"
+        model_name = f"Foudational Model-{timestamp}.pth"
 
-        torch.save(model, rf"C:\Users\mehul\a Folder\DataPhysicsHybrid\data\models\nagumo debugged\{model_name}")
+        torch.save(model, rf"Models\{model_name}")
 
         print(f"Training interrupted. Model saved at epoch {ep}.")
         
@@ -961,6 +809,6 @@ if __name__ == "__main__":
         
             #$ saving the model to wandb cloud :
         artifact = wandb.Artifact(name=f"model-foundational with 7 experts", type="model", metadata={"epochs_trained": ep + 1})
-        artifact.add_file(rf"C:\Users\mehul\a Folder\DataPhysicsHybrid\data\models\7_experts\{model_name}")
+        artifact.add_file(rf"Models\{model_name}")
         wandb.log_artifact(artifact)
     wandb.finish()
