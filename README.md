@@ -27,7 +27,7 @@ By hybridizing the **Neural Combinatorial Wavelet Neural Operator (NCWNO)** with
 
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/Mehul1729/Physics-Informed-NCWNO.git](https://github.com/Mehul1729/Physics-Informed-NCWNO.git)
+   git clone https://github.com/Mehul1729/Physics-Informed-NCWNO
    cd Physics-Informed-NCWNO
 
 2. **Install dependency Python libraries:**
