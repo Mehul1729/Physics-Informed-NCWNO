@@ -4,6 +4,10 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/Status-Work_in_Progress-yellow)]()
 
+
+#### Please refer to the Report : https://github.com/Mehul1729/Physics-Informed-NCWNO/blob/5fbf564f9f675da00e1b977923d2cc2261168aee/Report.pdf
+
+
 ## 📌 Overview
 This repository contains the PyTorch implementation of the **PI-NCWNO**, a foundational model for solving Partial Differential Equations (PDEs). 
 
