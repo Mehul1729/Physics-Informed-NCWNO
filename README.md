@@ -25,3 +25,17 @@ By hybridizing the **Neural Combinatorial Wavelet Neural Operator (NCWNO)** with
    ```bash
    git clone [https://github.com/Mehul1729/Physics-Informed-NCWNO.git](https://github.com/Mehul1729/Physics-Informed-NCWNO.git)
    cd Physics-Informed-NCWNO
+
+2. **Install dependency Python libraries:**
+    ```bash
+    pip install -r requirements.txt
+
+3. **Run/Test the models: **
+   - for Foundational training:
+    ```bash
+    python context_phy_foundational.py
+
+- for testing the model:
+  ```bash
+  python testing foundational.py
+     
